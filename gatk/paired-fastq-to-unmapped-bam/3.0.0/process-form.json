@@ -1,0 +1,24 @@
+{
+  "form": {
+    "type": "object",
+    "title": "Sample Information",
+    "properties": {
+      "run_date": {
+        "type": "string",
+        "title": "Run Date",
+        "description": "(optional) Current date by default"
+      },
+      "platform_name": {
+        "type": "string",
+        "title": "Platform Name",
+        "default": "Illumina"
+      },
+      "sequencing_center": {
+        "type": "string",
+        "title": "Sequencing Center",
+        "default": "Sequencing_Center"
+      }
+    }
+  },
+  "ui": {}
+}

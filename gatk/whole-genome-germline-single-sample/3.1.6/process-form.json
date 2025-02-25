@@ -1,0 +1,27 @@
+{
+  "form": {
+    "type": "object",
+    "properties": {
+      "genome": {
+        "title": "Reference Genome",
+        "type": "string",
+        "enum": [
+          "Homo sapiens (GRCh38)"
+        ],
+        "default": "Homo sapiens (GRCh38)"
+      },
+      "dragen_mode": {
+        "title": "DRAGEN-GATK Mode",
+        "type": "string",
+        "enum": [
+          "Disabled",
+          "Enabled (Functional Equivalence)",
+          "Enabled (Maximum Quality)"
+        ],
+        "default": "Disabled",
+        "help_text": "Adjust parameters to run the WGS workflow in the DRAGEN-GATK mode"
+      }
+    }
+  },
+  "ui": {}
+}
