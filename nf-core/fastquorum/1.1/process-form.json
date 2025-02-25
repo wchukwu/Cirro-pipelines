@@ -1,0 +1,188 @@
+{
+    "ui": {},
+    "form": {
+      "type": "object",
+      "properties": {
+          "main_options": {
+              "title": "Main options",
+              "type": "object",
+              "description": "Most common options used for the pipeline",
+              "default": "",
+              "properties": {
+                  "mode": {
+                      "title": "Analysis Mode",
+                      "type": "string",
+                      "default": "rd",
+                      "description": "R&D mode is for flexibility and testing, while HT mode prioritizes performance and scalability.",
+                      "enum": ["rd", "ht"],
+                      "enumNames": ["R&D", "High-Throughput"]
+                  },
+                  "duplex_seq": {
+                      "type": "boolean",
+                      "title": "Enable when the input is duplex sequenecing.",
+                      "description": "Duplex Sequencing",
+                      "help_text": "With this parameter flags in various tools are set for duplex sequencing data."
+                  },
+                  "read_structure": {
+                    "type": "string",
+                    "title": "Read structure",
+                    "description": "Specification of library structure used by fgbio. Note: can be specified on a per-sample basis with the `read_structure` samplesheet column.",
+                    "default": "Example: 6bp inline barcodes - 6M+T 6M+T"
+                  }
+              }
+          },
+          "grouping": {
+              "title": "Read grouping options",
+              "type": "object",
+              "description": "Options for when grouping reads by UMI",
+              "properties": {
+                  "groupreadsbyumi_strategy": {
+                      "type": "string",
+                      "title": "Grouping strategy",
+                      "description": "Grouping strategy for fgbio's GroupReadsByUmi",
+                      "enum": ["Identity", "Edit", "Adjacency", "Paired", "Default"],
+                      "default": "Default"
+                  },
+                  "groupreadsbyumi_edits": {
+                      "type": "integer",
+                      "default": 1,
+                      "title": "Maximum number of edits",
+                      "description": "Maximum number of allowable edits for fgbio's GroupReadsByUmi."
+                  }
+              }
+          },
+          "consensus_calling": {
+              "title": "Consensus reads options",
+              "type": "object",
+              "description": "Options for when creating consensus reads",
+              "properties": {
+                  "call_min_reads": {
+                      "type": "string",
+                      "title": "Minimum reads to call a consensus",
+                      "description": "The minimum reads to call a consensus for fgbio's CallMolecularConsensusReads/CallDuplexConsensusReads."
+                  },
+                  "call_min_baseq": {
+                      "type": "integer",
+                      "title": "Minimum input base quality",
+                      "description": "The minimum input base quality to use when calling a consensus for fgbio's CallMolecularConsensusReads/CallDuplexConsensusReads."
+                  }
+              }
+          },
+          "consensus_filtering": {
+              "title": "Consensus filtering options",
+              "type": "object",
+              "description": "Options for when filtering consensus reads",
+              "properties": {
+                  "filter_min_reads": {
+                      "type": "string",
+                      "title": "Minimum reads to keep a consensus",
+                      "description": "The minimum reads to keep a consensus for fgbio's FilterConsensusReads."
+                  },
+                  "filter_min_baseq": {
+                      "type": "integer",
+                      "title": "Minimum consensus base quality",
+                      "description": "The minimum consensus base quality to keep when calling a consensus for fgbio's FilterConsensusReads."
+                  },
+                  "filter_max_base_error_rate": {
+                      "type": "string",
+                      "title": "The maximum error rate for a single consensus base",
+                      "description": "The maximum error rate for a single consensus base when filtering a consensus for fgbio's FilterConsensusReads."
+                  }
+              }
+          },
+          "reference_genome_options": {
+              "title": "Reference genome options",
+              "type": "object",
+              "description": "Reference genome related files and options required for the workflow.",
+              "properties": {
+                  "genome": {
+                      "type": "string",
+                      "title": "Reference Genome",
+                      "description": "Name of iGenomes reference.",
+                      "enum": [
+                        "TAIR10",
+                        "EB2",
+                        "UMD3.1",
+                        "bosTau8",
+                        "WBcel235",
+                        "ce10",
+                        "CanFam3.1",
+                        "canFam3",
+                        "GRCz10",
+                        "danRer10",
+                        "BDGP6",
+                        "dm6",
+                        "EquCab2",
+                        "equCab2",
+                        "EB1",
+                        "Galgal4",
+                        "Gm01",
+                        "GRCh37",
+                        "GRCh38",
+                        "hg18",
+                        "hg19",
+                        "hg38",
+                        "Mmul 1",
+                        "GRCm38",
+                        "mm10",
+                        "IRGSP-1.0",
+                        "CHIMP2.1.4",
+                        "panTro4",
+                        "Rnor 5.0",
+                        "Rnor 6.0",
+                        "rn6",
+                        "R64-1-1",
+                        "sacCer3",
+                        "EF2",
+                        "Sbi1",
+                        "Sscrofa10.2",
+                        "susScr3",
+                        "AGPv3"
+                      ],
+                      "enumNames": [
+                        "Arabidopsis thaliana (TAIR10)",
+                        "Bacillus subtilis 168 (EB2)",
+                        "Bos taurus (UMD3.1)",
+                        "Bos taurus (bosTau8)",
+                        "Caenorhabditis elegans (WBcel235)",
+                        "Caenorhabditis elegans (ce10)",
+                        "Canis familiaris (CanFam3.1)",
+                        "Canis familiaris (canFam3)",
+                        "Danio rerio (GRCz10)",
+                        "Danio rerio (danRer10)",
+                        "Drosophila melanogaster (BDGP6)",
+                        "Drosophila melanogaster (dm6)",
+                        "Equus caballus (EquCab2)",
+                        "Equus caballus (equCab2)",
+                        "Escherichia coli K 12 DH10B (EB1)",
+                        "Gallus gallus (Galgal4)",
+                        "Glycine max (Gm01)",
+                        "Homo sapiens (GRCh37)",
+                        "Homo sapiens (GRCh38)",
+                        "Homo sapiens (hg18)",
+                        "Homo sapiens (hg19)",
+                        "Homo sapiens (hg38)",
+                        "Macaca mulatta (Mmul 1)",
+                        "Mus musculus (GRCm38)",
+                        "Mus musculus (mm10)",
+                        "Oryza sativa japonica (IRGSP-1.0)",
+                        "Pan troglodytes (CHIMP2.1.4)",
+                        "Pan troglodytes (panTro4)",
+                        "Rattus norvegicus (Rnor 5.0)",
+                        "Rattus norvegicus (Rnor 6.0)",
+                        "Rattus norvegicus (rn6)",
+                        "Saccharomyces cerevisiae (R64-1-1)",
+                        "Saccharomyces cerevisiae (sacCer3)",
+                        "Schizosaccharomyces pombe (EF2)",
+                        "Sorghum bicolor (Sbi1)",
+                        "Sus scrofa (Sscrofa10.2)",
+                        "Sus scrofa (susScr3)",
+                        "Zea mays (AGPv3)"
+                      ],
+                      "default": "GRCh38"
+                  }
+              }
+          }
+      }
+    }
+  }

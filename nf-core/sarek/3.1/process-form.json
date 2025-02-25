@@ -1,0 +1,310 @@
+{
+  "ui": {
+    "analysis_type": {
+      "tools": {
+        "ui:widget": "checkboxes"
+      }
+    },
+    "annotation": {
+      "annotation_tool": {
+        "ui:widget": "checkboxes"
+      }
+    },
+    "read_trimming_options": {
+      "trim_fastq": {
+        "ui:widget": "radio"
+      }
+    }
+  },
+  "form": {
+    "title": "Variant Calling (nf-core/sarek)",
+    "description": "Perform variant calling on unaligned sequence reads",
+    "type": "object",
+    "properties": {
+      "workflow_version": {
+        "type": "string",
+        "title": "Workflow Version",
+        "description": "Select the specific version of nf-core/sarek used for analysis",
+        "enum": [
+          "3.1",
+          "3.1.1",
+          "3.1.2",
+          "3.2.0",
+          "3.2.1",
+          "3.2.2",
+          "3.2.3",
+          "3.3.0",
+          "3.3.1",
+          "3.3.2"
+        ],
+        "default": "3.3.2"
+      },
+      "analysis_type": {
+        "title": "Experiment Design",
+        "description": "Indiciate the analysis type (germline/somatic) and select high level parameters for the workflow.",
+        "type": "object",
+        "required": ["genome", "analysis_type", "tools", "wes"],
+        "properties": {
+          "genome": {
+            "title": "Reference Genome",
+            "type": "string",
+            "default": "GATK.GRCh38",
+            "enum": ["GATK.GRCh38", "GATK.GRCh37", "GRCm38"],
+            "enumNames": [
+              "Homo sapiens (GATK.GRCh38)",
+              "Homo sapiens (GATK.GRCh37)",
+              "Mus musculus (GRCm38)"
+            ]
+          },
+          "wes": {
+            "title": "Whole Exome/Targeted Gene Panel Assay",
+            "description": "Please indicate if your data was generated using a capture kit.",
+            "type": "boolean",
+            "default": false
+          },
+          "intervals": {
+            "title": "Genomic intervals",
+            "description": "Target bed file in case of whole exome or targeted sequencing or intervals file for parallelization.",
+            "type": "string",
+            "pathType": "references",
+            "file": "**/genome_bed/**/regions.bed"
+          },
+          "germline_resource": {
+            "title": "Germline resource",
+            "description": "The germline resource VCF file (bgzipped) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.",
+            "type": "string",
+            "pathType": "references",
+            "file": "**/germline_resource/**/germline_resource.vcf.gz"
+          },
+          "analysis_type": {
+            "title": "Variant Calling Type",
+            "default": "Germline Variant Calling",
+            "enum": ["Germline Variant Calling", "Somatic Variant Calling"]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "analysis_type": {
+                  "const": "Germline Variant Calling"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "tools": {
+                  "title": "Germline variant calling tool(s)",
+                  "description": "Please select one or more variant callers for your analysis.",
+                  "type": "array",
+                  "pattern": "^((cnvkit|deepvariant|freebayes|haplotypecaller|manta|mpileup|strelka|tiddit)*,?)*$",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "cnvkit",
+                      "deepvariant",
+                      "freebayes",
+                      "haplotypecaller",
+                      "manta",
+                      "mpileup",
+                      "strelka",
+                      "tiddit"
+                    ],
+                    "enumNames": [
+                      "CNVkit",
+                      "DeepVariant",
+                      "FreeBayes",
+                      "HaplotypeCaller",
+                      "Manta",
+                      "mpileup",
+                      "Strelka",
+                      "TIDDIT"
+                    ]
+                  },
+                  "uniqueItems": true
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "analysis_type": {
+                  "const": "Somatic Variant Calling"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "tools": {
+                  "title": "Somatic variant calling tool(s)",
+                  "description": "Please select one or more variant callers for your analysis.",
+                  "type": "array",
+                  "pattern": "^((ascat|controlfreec|cnvkit|freebayes|manta|msisensorpro|mutect2|strelka|tiddit)*,?)*$",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ascat",
+                      "controlfreec",
+                      "cnvkit",
+                      "freebayes",
+                      "manta",
+                      "msisensorpro",
+                      "mutect2",
+                      "strelka",
+                      "tiddit"
+                    ],
+                    "enumNames": [
+                      "ASCAT",
+                      "Control-FREEC",
+                      "CNVkit",
+                      "FreeBayes",
+                      "Manta",
+                      "MSIsensorpro",
+                      "Mutect2",
+                      "Strelka",
+                      "TIDDIT"
+                    ]
+                  },
+                  "uniqueItems": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      "annotation": {
+        "title": "Variant Annotation",
+        "description": "Select variant annotation tools and VEP plugins.",
+        "type": "object",
+        "properties": {
+          "annotation_tool": {
+            "title": "Annotation tool(s)",
+            "description": "Please select one or both variant annotation tools.",
+            "type": "array",
+            "pattern": "^((vep|snpeff)*,?)*$",
+            "items": {
+              "type": "string",
+              "enum": ["vep", "snpeff"],
+              "enumNames": ["Variant Effect Predictor (VEP)", "snpEff"]
+            },
+            "uniqueItems": true
+          }
+        },
+        "if": {
+          "properties": {
+            "annotation_tool": {
+              "contains": {
+                "type": "string",
+                "const": "vep"
+              }
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "vep_dbnsfp": {
+              "type": "boolean",
+              "title": "dbNSFP plugin",
+              "description": "Enable the use of the VEP dbNSFP plugin that retrieves data for missense variants.",
+              "default": false
+            },
+            "vep_loftee": {
+              "type": "boolean",
+              "title": "LOFTEE plugin",
+              "description": "Enable the use of the VEP LOFTEE plugin to identify LoF (loss-of-function) variation.",
+              "default": false
+            },
+            "vep_spliceai": {
+              "type": "boolean",
+              "title": "SpliceAI plugin",
+              "description": "Enable the use of the VEP SpliceAI plugin to annotate variants predicted effect on splicing.",
+              "default": false
+            },
+            "vep_spliceregion": {
+              "type": "boolean",
+              "title": "SpliceRegion plugin",
+              "description": "Enable the use of the VEP SpliceRegion plugin to provide granular predictions of splicing effects.",
+              "default": false
+            }
+          }
+        }
+      },
+      "read_trimming_options": {
+        "title": "Read Trimming Options",
+        "description": "Parameters for performing adapter and read trimming using Trim-Galore.",
+        "type": "object",
+        "properties": {
+          "trim_fastq": {
+            "type": "boolean",
+            "title": "Trim reads using Trim-Galore?",
+            "default": false
+          }
+        },
+        "dependencies": {
+          "trim_fastq": {
+            "oneOf": [
+              {
+                "properties": {
+                  "trim_fastq": {
+                    "enum": [false]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "trim_fastq": {
+                    "enum": [true]
+                  },
+                  "clip_r1": {
+                    "type": "integer",
+                    "title": "Clip R1",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)."
+                  },
+                  "clip_r2": {
+                    "type": "integer",
+                    "title": "Clip R2",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)."
+                  },
+                  "three_prime_clip_r1": {
+                    "type": "integer",
+                    "title": "Three Prime Clip R1",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed."
+                  },
+                  "three_prime_clip_r2": {
+                    "type": "integer",
+                    "title": "Three Prime Clip R2",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed."
+                  },
+                  "trim_nextseq": {
+                    "type": "integer",
+                    "title": "Trim NextSeq",
+                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails.",
+                    "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases."
+                  },
+                  "save_trimmed": {
+                    "type": "boolean",
+                    "title": "Save the trimmed FastQ files in the results directory?",
+                    "default": false
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "advanced_options": {
+        "type": "object",
+        "title": "Advanced Options",
+        "properties": {
+          "optical_duplicate_pixel_distance": {
+            "type": "integer",
+            "title": "MarkDuplicates - Optical Duplicate Pixel Distance",
+            "description": "The `--OPTICAL_DUPLICATE_PIXEL_DISTANCE` parameter is used by MarkDuplicates to set the maximum offset between two duplicate clusters in pixels for them to be considered optical duplicates. A value of 100 is generally appropriate for unpatterned Illumina flowcells and 250 is appropriate for patterned Illumina flow cells.",
+            "default": 100
+          }
+        }
+      }
+    }
+  }
+}

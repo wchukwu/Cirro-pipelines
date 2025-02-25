@@ -1,0 +1,1037 @@
+{
+    "ui": {},
+    "form": {
+        "title": "nf-core/mag pipeline parameters",
+        "description": "Assembly, binning and annotation of metagenomes",
+        "type": "object",
+        "properties": {
+            "quality_control_for_short_reads_options": {
+                "title": "Quality Control Options",
+                "type": "object",
+                "properties": {
+                    "clip_tool": {
+                        "title": "Clipping Tool",
+                        "type": "string",
+                        "default": "fastp",
+                        "description": "Specify which adapter clipping tool to use.",
+                        "enum": ["fastp", "adapterremoval"]
+                    },
+                    "save_clipped_reads": {
+                        "type": "boolean",
+                        "title": "Save Clipped Reads",
+                        "default": false,
+                        "description": "Specify to save the resulting clipped FASTQ files."
+                    },
+                    "reads_minlength": {
+                        "title": "Reads: Minimum Length",
+                        "type": "integer",
+                        "default": 15,
+                        "description": "The minimum length of reads must have to be retained for downstream analysis."
+                    },
+                    "fastp_qualified_quality": {
+                        "title": "FASTP: Qualified Quality",
+                        "type": "integer",
+                        "default": 15,
+                        "description": "Minimum phred quality value of a base to be qualified in fastp.",
+                        "help": "Reads with more than 40% of unqualified bases will be discarded."
+                    },
+                    "fastp_cut_mean_quality": {
+                        "title": "FASTP: Cut Mean Quality",
+                        "type": "integer",
+                        "default": 15,
+                        "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
+                        "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
+                    },
+                    "fastp_save_trimmed_fail": {
+                        "title": "FASTP: Save Reads that Fail Trimming",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
+                    },
+                    "adapterremoval_minquality": {
+                        "title": "AdapterRemoval: Minimum Quality",
+                        "type": "integer",
+                        "default": 2,
+                        "description": "The minimum base quality for low-quality base trimming by AdapterRemoval."
+                    },
+                    "adapterremoval_trim_quality_stretch": {
+                        "title": "AdapterRemoval: Trim Quality Stretch",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Turn on quality trimming by consecutive stretch of low quality bases, rather than by window.",
+                        "help_text": "Default base-quality trimming is set to trim by 'windows', as in FastP. Specifying this flag will use trim via contiguous stretch of low quality bases (Ns) instead.\n\n> Replaces --trimwindows 4 with --trimqualities in AdapterRemoval"
+                    },
+                    "adapterremoval_adapter1": {
+                        "title": "AdapterRemoval: Adapter 1",
+                        "type": "string",
+                        "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                        "description": "Forward read adapter to be trimmed by AdapterRemoval."
+                    },
+                    "adapterremoval_adapter2": {
+                        "title": "AdapterRemoval: Adapter 2",
+                        "type": "string",
+                        "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                        "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
+                    },
+                    "host_genome": {
+                        "title": "Host Removal: Genome",
+                        "type": "string",
+                        "help_text": "Host read removal is done with Bowtie2. Both the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
+                        "description": "Name of iGenomes reference for host contamination removal.",
+                        "enum": [
+                            "TAIR10",
+                            "EB2",
+                            "UMD3.1",
+                            "bosTau8",
+                            "WBcel235",
+                            "ce10",
+                            "CanFam3.1",
+                            "canFam3",
+                            "GRCz10",
+                            "danRer10",
+                            "BDGP6",
+                            "dm6",
+                            "EquCab2",
+                            "equCab2",
+                            "EB1",
+                            "Galgal4",
+                            "Gm01",
+                            "GRCh37",
+                            "GRCh38",
+                            "hg18",
+                            "hg19",
+                            "hg38",
+                            "Mmul 1",
+                            "GRCm38",
+                            "mm10",
+                            "IRGSP-1.0",
+                            "CHIMP2.1.4",
+                            "panTro4",
+                            "Rnor 5.0",
+                            "Rnor 6.0",
+                            "rn6",
+                            "R64-1-1",
+                            "sacCer3",
+                            "EF2",
+                            "Sbi1",
+                            "Sscrofa10.2",
+                            "susScr3",
+                            "AGPv3"
+                        ],
+                        "enumNames": [
+                            "Arabidopsis thaliana (TAIR10)",
+                            "Bacillus subtilis 168 (EB2)",
+                            "Bos taurus (UMD3.1)",
+                            "Bos taurus (bosTau8)",
+                            "Caenorhabditis elegans (WBcel235)",
+                            "Caenorhabditis elegans (ce10)",
+                            "Canis familiaris (CanFam3.1)",
+                            "Canis familiaris (canFam3)",
+                            "Danio rerio (GRCz10)",
+                            "Danio rerio (danRer10)",
+                            "Drosophila melanogaster (BDGP6)",
+                            "Drosophila melanogaster (dm6)",
+                            "Equus caballus (EquCab2)",
+                            "Equus caballus (equCab2)",
+                            "Escherichia coli K 12 DH10B (EB1)",
+                            "Gallus gallus (Galgal4)",
+                            "Glycine max (Gm01)",
+                            "Homo sapiens (GRCh37)",
+                            "Homo sapiens (GRCh38)",
+                            "Homo sapiens (hg18)",
+                            "Homo sapiens (hg19)",
+                            "Homo sapiens (hg38)",
+                            "Macaca mulatta (Mmul 1)",
+                            "Mus musculus (GRCm38)",
+                            "Mus musculus (mm10)",
+                            "Oryza sativa japonica (IRGSP-1.0)",
+                            "Pan troglodytes (CHIMP2.1.4)",
+                            "Pan troglodytes (panTro4)",
+                            "Rattus norvegicus (Rnor 5.0)",
+                            "Rattus norvegicus (Rnor 6.0)",
+                            "Rattus norvegicus (rn6)",
+                            "Saccharomyces cerevisiae (R64-1-1)",
+                            "Saccharomyces cerevisiae (sacCer3)",
+                            "Schizosaccharomyces pombe (EF2)",
+                            "Sorghum bicolor (Sbi1)",
+                            "Sus scrofa (Sscrofa10.2)",
+                            "Sus scrofa (susScr3)",
+                            "Zea mays (AGPv3)"
+                        ],
+                        "default": "GRCh38"
+                    },
+                    "host_removal_verysensitive": {
+                        "title": "Host Removal: Very Sensitive",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Use the `--very-sensitive` instead of the`--sensitive`setting for Bowtie 2 to map reads against the host genome."
+                    },
+                    "host_removal_save_ids": {
+                        "title": "Host Removal: Save IDs",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Save the read IDs of removed host reads."
+                    },
+                    "save_hostremoved_reads": {
+                        "title": "Host Removal: Save Removed Reads",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Specify to save input FASTQ files with host reads removed."
+                    },
+                    "keep_phix": {
+                        "title": "Keep PhiX Reads",
+                        "type": "boolean",
+                        "description": "Keep reads similar to the Illumina internal standard PhiX genome.",
+                        "default": false
+                    },
+                    "skip_clipping": {
+                        "title": "Skip Clipping",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Skip read preprocessing using fastp or adapterremoval."
+                    },
+                    "save_phixremoved_reads": {
+                        "title": "Save PhiX Removed Reads",                    
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Specify to save input FASTQ files with phiX reads removed."
+                    },
+                    "bbnorm": {
+                        "title": "BBnorm: Enabled",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Run BBnorm to normalize sequence depth."
+                    },
+                    "bbnorm_target": {
+                        "title": "BBnorm: Target Depth",
+                        "type": "integer",
+                        "default": 100,
+                        "description": "Set BBnorm target maximum depth to this number."
+                    },
+                    "bbnorm_min": {
+                        "title": "BBnorm: Minimum Depth",
+                        "type": "integer",
+                        "default": 5,
+                        "description": "Set BBnorm minimum depth to this number."
+                    },
+                    "save_bbnorm_reads": {
+                        "title": "BBnorm: Save Normalized Reads",
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Save normalized read files to output directory."
+                    }
+                }
+            },
+            "taxonomic_profiling_options": {
+                "title": "Taxonomic Profiling Options",
+                "type": "object",
+                "description": "Taxonomic classification is disabled by default. You have to specify one of the options below to activate it.",
+                "properties": {
+                    "run_kraken2": {
+                        "type": "boolean",
+                        "description": "Run taxonomic binning with kraken2.",
+                        "title": "Run Kraken2",
+                        "default": false
+                    },
+                    "kraken2_db": {
+                        "type": "string",
+                        "title": "Kraken2 database",
+                        "default": "s3://pubweb-references/kraken/k2_standard_20240112.tar.gz",
+                        "enum": [
+                            "s3://pubweb-references/kraken/k2_standard_20240112.tar.gz",
+                            "s3://pubweb-references/kraken/k2_pluspf_20240112.tar.gz",
+                            "s3://pubweb-references/kraken/k2_pluspfp_20240112.tar.gz",
+                            "s3://pubweb-references/kraken/k2_viral_20240112.tar.gz",
+                            "s3://pubweb-references/kraken/k2_eupathdb48_20230407.tar.gz"
+                        ],
+                        "enumNames": [
+                            "Standard: RefSeq Archaea, Bacteria, Biral, Plasmid, Human, UniVec_Core (1/12/2024)",
+                            "Standard plus RefSeq Protozoa & Fungi (1/12/2024)",
+                            "Standard plus RefSeq Protozoa, Fungi & Plant (1/12/2024)",
+                            "RefSeq Viral (1/12/2024)",
+                            "Eukaryotic Pathogens (4/18/2024)"
+                        ]
+                    },
+                    "run_cat": {
+                        "type": "boolean",
+                        "description": "Run taxonomic binning with CAT.",
+                        "title": "Run CAT",
+                        "default": false
+                    },
+                    "run_gtdb": {
+                        "type": "boolean",
+                        "description": "Run GTDB-Tk for taxonomic classification.",
+                        "title": "Run GTDB-Tk",
+                        "default": false
+                    },
+                    "gtdbtk_min_completeness": {
+                        "type": "number",
+                        "title": "GTDB-Tk: Min. Completeness",
+                        "default": 50.0,
+                        "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
+                        "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                        "minimum": 0.01,
+                        "maximum": 100
+                    },
+                    "gtdbtk_max_contamination": {
+                        "type": "number",
+                        "title": "GTDB-Tk: Max. Contamination",
+                        "default": 10.0,
+                        "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
+                        "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "gtdbtk_min_perc_aa": {
+                        "type": "number",
+                        "title": "GTDB-Tk: Min. Percent Amino Acid Identity",
+                        "default": 10.0,
+                        "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "gtdbtk_min_af": {
+                        "type": "number",
+                        "title": "GTDB-Tk: Min. Alignment Fraction",
+                        "default": 0.65,
+                        "description": "Min. alignment fraction to consider closest genome.",
+                        "minimum": 0,
+                        "maximum": 1
+                    },
+                    "gtdbtk_pplacer_cpus": {
+                        "type": "number",
+                        "title": "GTDB-Tk: pplacer CPUs",
+                        "default": 1.0,
+                        "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
+                        "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
+                    },
+                    "run_genomad": {
+                        "type": "boolean",
+                        "description": "Run virus classification with geNomad.",
+                        "title": "Run geNomad"
+                    }
+                }
+            },
+            "assembly_options": {
+                "title": "Assembly Options",
+                "type": "object",
+                "properties": {
+                    "coassemble_group": {
+                        "title": "Co-assemble group",
+                        "type": "boolean",
+                        "description": "Co-assemble samples within one group, instead of assembling each sample separately."
+                    },
+                    "spades_options": {
+                        "title": "SPAdes options",
+                        "type": "string",
+                        "description": "Additional custom options for SPAdes.",
+                        "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options=\"-k 21,33,55,77\")"
+                    },
+                    "megahit_options": {
+                        "title": "MEGAHIT options",
+                        "type": "string",
+                        "description": "Additional custom options for MEGAHIT.",
+                        "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options=\"--presets meta-large\""
+                    },
+                    "skip_spades": {
+                        "title": "Skip SPAdes",
+                        "type": "boolean",
+                        "description": "Skip Illumina-only SPAdes assembly."
+                    },
+                    "skip_spadeshybrid": {
+                        "title": "Skip SPAdes Hybrid",
+                        "type": "boolean",
+                        "description": "Skip SPAdes hybrid assembly."
+                    },
+                    "skip_megahit": {
+                        "title": "Skip MEGAHIT",
+                        "type": "boolean",
+                        "description": "Skip MEGAHIT assembly."
+                    },
+                    "skip_quast": {
+                        "title": "Skip QUAST",
+                        "type": "boolean",
+                        "description": "Skip metaQUAST."
+                    }
+                }
+            },
+            "gene_prediction_and_annotation_options": {
+                "title": "Gene Prediction and Annotation Options",
+                "type": "object",
+                "properties": {
+                    "skip_prodigal": {
+                        "title": "Skip Prodigal",
+                        "type": "boolean",
+                        "description": "Skip Prodigal gene prediction"
+                    },
+                    "skip_prokka": {
+                        "title": "Skip Prokka",
+                        "type": "boolean",
+                        "description": "Skip Prokka genome annotation."
+                    },
+                    "metaeuk_db": {
+                        "title": "MetaEuk database",
+                        "type": "string",
+                        "description": "Database used for the identification and annotation of eukaryotic genomes.",
+                        "default": "s3://pubweb-references/mmseqs/2024-05-10/UniRef90/",
+                        "enum": [
+                            "s3://pubweb-references/mmseqs/2024-05-10/UniRef90/",
+                            "s3://pubweb-references/mmseqs/2024-05-10/UniProtKB_Swiss-Prot/"
+                        ],
+                        "enumNames": ["UniRef90", "UniProtKB/Swiss-Prot"]
+                    },
+                    "skip_metaeuk": {
+                        "title": "Skip MetaEuk",
+                        "type": "boolean",
+                        "description": "Skip MetaEuk gene prediction and annotation"
+                    }
+                }
+            },
+            "virus_identification_options": {
+                "title": "Virus Identification Options",
+                "type": "object",
+                "properties": {
+                    "run_virus_identification": {
+                        "title": "Run virus identification",
+                        "type": "boolean",
+                        "description": "Run virus identification."
+                    },
+                    "genomad_min_score": {
+                        "title": "geNomad: Minimum Score",
+                        "type": "number",
+                        "default": 0.7,
+                        "description": "Minimum geNomad score for a sequence to be considered viral"
+                    },
+                    "genomad_splits": {
+                        "title": "geNomad: Splits",
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Number of groups that geNomad's MMSeqs2 databse should be split into (reduced memory requirements)"
+                    }
+                }
+            },
+            "binning_options": {
+                "title": "Binning Options",
+                "type": "object",
+                "properties": {
+                    "binning_map_mode": {
+                        "title": "Binning map mode",
+                        "type": "string",
+                        "default": "group",
+                        "enum": ["all", "group", "own"],
+                        "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly.",
+                        "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples."
+                    },
+                    "skip_binning": {
+                        "title": "Skip binning",
+                        "type": "boolean",
+                        "description": "Skip metagenome binning entirely"
+                    },
+                    "skip_metabat2": {
+                        "title": "Skip MetaBAT2",
+                        "type": "boolean",
+                        "description": "Skip MetaBAT2 Binning"
+                    },
+                    "skip_maxbin2": {
+                        "title": "Skip MaxBin2",
+                        "type": "boolean",
+                        "description": "Skip MaxBin2 Binning"
+                    },
+                    "skip_concoct": {
+                        "title": "Skip CONCOCT",
+                        "type": "boolean",
+                        "description": "Skip CONCOCT Binning"
+                    },
+                    "min_contig_size": {
+                        "title": "Minimum contig size",
+                        "type": "integer",
+                        "default": 1500,
+                        "description": "Minimum contig size to be considered for binning and for bin quality check.",
+                        "help_text": "For forwarding into downstream analysis, i.e. QUAST and BUSCO, and reporting."
+                    },
+                    "min_length_unbinned_contigs": {
+                        "title": "Minimum length of unbinned contigs",
+                        "type": "integer",
+                        "default": 1000000,
+                        "description": "Minimal length of contigs that are not part of any bin but treated as individual genome.",
+                        "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                    },
+                    "max_unbinned_contigs": {
+                        "title": "Maximum unbinned contigs",
+                        "type": "integer",
+                        "default": 100,
+                        "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
+                        "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                    },
+                    "bowtie2_mode": {
+                        "title": "Bowtie2 mode",
+                        "type": "string",
+                        "description": "Bowtie2 alignment mode",
+                        "default": "--sensitive",
+                        "enum": [
+                            "--very-fast",
+                            "--fast",
+                            "--sensitive",
+                            "--very-sensitive",
+                            "--very-fast-local",
+                            "--fast-local",
+                            "--sensitive-local",
+                            "--very-sensitive-local",
+                            "--end-to-end",
+                            "--local"
+                        ]
+                    },
+                    "save_assembly_mapped_reads": {
+                        "title": "Save assembly mapped reads",
+                        "type": "boolean",
+                        "description": "Save the output of mapping raw reads back to assembled contigs",
+                        "help_text": "Specify to save the BAM and BAI files generated when mapping input reads back to the assembled contigs (performed in preparation for binning and contig depth estimations)."
+                    },
+                    "bin_domain_classification": {
+                        "title": "Bin domain classification",
+                        "type": "boolean",
+                        "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement.",
+                        "help_text": "Enable this if it is likely that your metagenome samples contain a mixture of eukaryotic and prokaryotic genomes. This will ensure that prokaryote-only steps only receive putatively prokaryotic genomes, and vice-versa. Additionally, may improve the performance of DAS Tool by ensuring it only receives prokaryotic genomes."
+                    },
+                    "tiara_min_length": {
+                        "title": "Tiara minimum contig length",
+                        "type": "integer",
+                        "default": 3000,
+                        "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
+                    }
+                }
+            },
+            "bin_quality_check_options": {
+                "title": "Bin Quality Check Options",
+                "type": "object",
+                "properties": {
+                    "skip_binqc": {
+                        "title": "Skip Bin QC",
+                        "type": "boolean",
+                        "description": "Disable bin QC with BUSCO or CheckM."
+                    },
+                    "binqc_tool": {
+                        "type": "string",
+                        "title": "Bin QC tool",
+                        "default": "busco",
+                        "description": "Specify which tool for bin quality-control validation to use.",
+                        "enum": ["busco", "checkm"]
+                    },
+                    "busco_db": {
+                        "type": "string",
+                        "title": "BUSCO Database",
+                        "default": "s3://pubweb-references/busco/bacteria_odb10.2024-01-08.tar.gz",
+                        "description": "Specify the BUSCO database to use for bin quality control.",
+                        "enum": [
+                            "s3://pubweb-references/busco/acidobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/aconoidasida_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/actinobacteria_class_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/actinobacteria_phylum_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/actinopterygii_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/agaricales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/agaricomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/alphabaculovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/alphaherpesvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/alphaproteobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/alteromonadales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/alveolata_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/apicomplexa_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/aquificae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/arachnida_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/archaea_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/arthropoda_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/ascomycota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/aves_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/aviadenovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacillales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacilli_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacteroidales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacteroidetes-chlorobi_group_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacteroidetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bacteroidia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/baculoviridae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/basidiomycota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/bclasvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/betabaculovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/betaherpesvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/betaproteobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/boletales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/brassicales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/burkholderiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/campylobacterales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/capnodiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/carnivora_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cellvibrionales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cetartiodactyla_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chaetothyriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cheoctovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chlamydiae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chlorobi_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chloroflexi_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chlorophyta_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chordopoxvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chromatiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/chroococcales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/clostridiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/clostridia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/coccidia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/coriobacteriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/coriobacteriia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/corynebacteriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cyanobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cyprinodontiformes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cytophagales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/cytophagia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/delta-epsilon-subdivisions_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/deltaproteobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/desulfobacterales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/desulfovibrionales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/desulfurococcales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/desulfuromonadales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/diptera_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/dothideomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/embryophyta_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/endopterygota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/enquatrovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/enterobacterales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/entomoplasmatales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/epsilonproteobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/euarchontoglires_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/eudicots_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/euglenozoa_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/eukaryota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/eurotiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/eurotiomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/euryarchaeota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/eutheria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/fabales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/firmicutes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/flavobacteriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/flavobacteriia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/fromanvirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/fungi_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/fusobacteriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/fusobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/gammaherpesvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/gammaproteobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/glires_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/glomerellales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/guernseyvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/halobacteriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/halobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/haloferacales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/helotiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/hemiptera_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/herpesviridae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/hymenoptera_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/hypocreales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/insecta_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/iridoviridae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/lactobacillales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/laurasiatheria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/legionellales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/leotiomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/lepidoptera_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/liliopsida_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/mammalia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/metazoa_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/methanobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/methanococcales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/methanomicrobiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/methanomicrobia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/micrococcales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/microsporidia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/mollicutes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/mollusca_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/mucorales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/mucoromycota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/mycoplasmatales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/natrialbales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/neisseriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/nematoda_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/nitrosomonadales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/nostocales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/oceanospirillales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/onygenales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/oscillatoriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/pahexavirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/passeriformes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/pasteurellales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/peduovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/planctomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/plasmodium_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/pleosporales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/poales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/polyporales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/poxviridae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/primates_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/propionibacteriales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/proteobacteria_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/pseudomonadales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/rhizobiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/rhizobium-agrobacterium_group_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/rhodobacterales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/rhodospirillales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/rickettsiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/rudiviridae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/saccharomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/sauropsida_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/selenomonadales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/simplexvirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/skunavirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/solanales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/sordariomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/sphingobacteriia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/sphingomonadales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/spirochaetales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/spirochaetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/spirochaetia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/spounavirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/stramenopiles_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/streptomycetales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/streptosporangiales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/sulfolobales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/synechococcales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/synergistetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tenericutes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tequatrovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/teseptimavirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tetrapoda_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tevenvirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thaumarchaeota_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thermoanaerobacterales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thermoplasmata_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thermoproteales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thermoprotei_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thermotogae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/thiotrichales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tissierellales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tissierellia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tremellomycetes_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/tunavirinae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/varicellovirus_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/verrucomicrobia_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/vertebrata_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/vibrionales_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/viridiplantae_odb10.2024-01-08.tar.gz",
+                            "s3://pubweb-references/busco/xanthomonadales_odb10.2024-01-08.tar.gz"
+                        ],
+                        "enumNames": [
+                            "Acidobacteria",
+                            "Aconoidasida",
+                            "Actinobacteria_Class",
+                            "Actinobacteria_Phylum",
+                            "Actinopterygii",
+                            "Agaricales",
+                            "Agaricomycetes",
+                            "Alphabaculovirus",
+                            "Alphaherpesvirinae",
+                            "Alphaproteobacteria",
+                            "Alteromonadales",
+                            "Alveolata",
+                            "Apicomplexa",
+                            "Aquificae",
+                            "Arachnida",
+                            "Archaea",
+                            "Arthropoda",
+                            "Ascomycota",
+                            "Aves",
+                            "Aviadenovirus",
+                            "Bacillales",
+                            "Bacilli",
+                            "Bacteria",
+                            "Bacteroidales",
+                            "Chlorobi_Group",
+                            "Bacteroidetes",
+                            "Bacteroidia",
+                            "Baculoviridae",
+                            "Basidiomycota",
+                            "Bclasvirinae",
+                            "Betabaculovirus",
+                            "Betaherpesvirinae",
+                            "Betaproteobacteria",
+                            "Boletales",
+                            "Brassicales",
+                            "Burkholderiales",
+                            "Campylobacterales",
+                            "Capnodiales",
+                            "Carnivora",
+                            "Cellvibrionales",
+                            "Cetartiodactyla",
+                            "Chaetothyriales",
+                            "Cheoctovirus",
+                            "Chlamydiae",
+                            "Chlorobi",
+                            "Chloroflexi",
+                            "Chlorophyta",
+                            "Chordopoxvirinae",
+                            "Chromatiales",
+                            "Chroococcales",
+                            "Clostridiales",
+                            "Clostridia",
+                            "Coccidia",
+                            "Coriobacteriales",
+                            "Coriobacteriia",
+                            "Corynebacteriales",
+                            "Cyanobacteria",
+                            "Cyprinodontiformes",
+                            "Cytophagales",
+                            "Cytophagia",
+                            "Subdivisions",
+                            "Deltaproteobacteria",
+                            "Desulfobacterales",
+                            "Desulfovibrionales",
+                            "Desulfurococcales",
+                            "Desulfuromonadales",
+                            "Diptera",
+                            "Dothideomycetes",
+                            "Embryophyta",
+                            "Endopterygota",
+                            "Enquatrovirus",
+                            "Enterobacterales",
+                            "Entomoplasmatales",
+                            "Epsilonproteobacteria",
+                            "Euarchontoglires",
+                            "Eudicots",
+                            "Euglenozoa",
+                            "Eukaryota",
+                            "Eurotiales",
+                            "Eurotiomycetes",
+                            "Euryarchaeota",
+                            "Eutheria",
+                            "Fabales",
+                            "Firmicutes",
+                            "Flavobacteriales",
+                            "Flavobacteriia",
+                            "Fromanvirus",
+                            "Fungi",
+                            "Fusobacteriales",
+                            "Fusobacteria",
+                            "Gammaherpesvirinae",
+                            "Gammaproteobacteria",
+                            "Glires",
+                            "Glomerellales",
+                            "Guernseyvirinae",
+                            "Halobacteriales",
+                            "Halobacteria",
+                            "Haloferacales",
+                            "Helotiales",
+                            "Hemiptera",
+                            "Herpesviridae",
+                            "Hymenoptera",
+                            "Hypocreales",
+                            "Insecta",
+                            "Iridoviridae",
+                            "Lactobacillales",
+                            "Laurasiatheria",
+                            "Legionellales",
+                            "Leotiomycetes",
+                            "Lepidoptera",
+                            "Liliopsida",
+                            "Mammalia",
+                            "Metazoa",
+                            "Methanobacteria",
+                            "Methanococcales",
+                            "Methanomicrobiales",
+                            "Methanomicrobia",
+                            "Micrococcales",
+                            "Microsporidia",
+                            "Mollicutes",
+                            "Mollusca",
+                            "Mucorales",
+                            "Mucoromycota",
+                            "Mycoplasmatales",
+                            "Natrialbales",
+                            "Neisseriales",
+                            "Nematoda",
+                            "Nitrosomonadales",
+                            "Nostocales",
+                            "Oceanospirillales",
+                            "Onygenales",
+                            "Oscillatoriales",
+                            "Pahexavirus",
+                            "Passeriformes",
+                            "Pasteurellales",
+                            "Peduovirus",
+                            "Planctomycetes",
+                            "Plasmodium",
+                            "Pleosporales",
+                            "Poales",
+                            "Polyporales",
+                            "Poxviridae",
+                            "Primates",
+                            "Propionibacteriales",
+                            "Proteobacteria",
+                            "Pseudomonadales",
+                            "Rhizobiales",
+                            "Agrobacterium_Group",
+                            "Rhodobacterales",
+                            "Rhodospirillales",
+                            "Rickettsiales",
+                            "Rudiviridae",
+                            "Saccharomycetes",
+                            "Sauropsida",
+                            "Selenomonadales",
+                            "Simplexvirus",
+                            "Skunavirus",
+                            "Solanales",
+                            "Sordariomycetes",
+                            "Sphingobacteriia",
+                            "Sphingomonadales",
+                            "Spirochaetales",
+                            "Spirochaetes",
+                            "Spirochaetia",
+                            "Spounavirinae",
+                            "Stramenopiles",
+                            "Streptomycetales",
+                            "Streptosporangiales",
+                            "Sulfolobales",
+                            "Synechococcales",
+                            "Synergistetes",
+                            "Tenericutes",
+                            "Tequatrovirus",
+                            "Teseptimavirus",
+                            "Tetrapoda",
+                            "Tevenvirinae",
+                            "Thaumarchaeota",
+                            "Thermoanaerobacterales",
+                            "Thermoplasmata",
+                            "Thermoproteales",
+                            "Thermoprotei",
+                            "Thermotogae",
+                            "Thiotrichales",
+                            "Tissierellales",
+                            "Tissierellia",
+                            "Tremellomycetes",
+                            "Tunavirinae",
+                            "Varicellovirus",
+                            "Verrucomicrobia",
+                            "Vertebrata",
+                            "Vibrionales",
+                            "Viridiplantae",
+                            "Xanthomonadales"
+                        ]
+                    },
+                    "refine_bins_dastool": {
+                        "title": "Refine bins with DAS Tool",
+                        "type": "boolean",
+                        "description": "Turn on bin refinement using DAS Tool."
+                    },
+                    "refine_bins_dastool_threshold": {
+                        "title": "DAS Tool score threshold",
+                        "type": "number",
+                        "default": 0.5,
+                        "description": "Specify single-copy gene score threshold for bin refinement.",
+                        "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    },
+                    "postbinning_input": {
+                        "title": "Post-binning input",
+                        "type": "string",
+                        "default": "raw_bins_only",
+                        "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
+                        "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
+                        "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                    },
+                    "run_gunc": {
+                        "title": "Run GUNC",
+                        "type": "boolean",
+                        "description": "Turn on GUNC genome chimerism checks"
+                    },
+                    "gunc_database_type": {
+                        "type": "string",
+                        "default": "progenomes",
+                        "description": "Specify which database to auto-download if not supplying own",
+                        "enum": ["progenomes", "gtdb"]
+                    }
+                }
+            },
+            "ancient_dna_assembly": {
+                "title": "Ancient DNA assembly",
+                "type": "object",
+                "description": "Performs ancient DNA assembly validation and contig consensus sequence recalling.",
+                "properties": {
+                    "ancient_dna": {
+                        "type": "boolean",
+                        "title": "Enable Ancient DNA Analysis",
+                        "description": "Turn on/off the ancient DNA subworfklow"
+                    },
+                    "pydamage_accuracy": {
+                        "type": "number",
+                        "default": 0.5,
+                        "title": "PyDamage accuracy threshold"
+                    },
+                    "skip_ancient_damagecorrection": {
+                        "type": "boolean",
+                        "title": "Skip ancient damage correction",
+                        "description": "deactivate damage correction of ancient contigs using variant and consensus calling"
+                    },
+                    "freebayes_ploidy": {
+                        "type": "integer",
+                        "default": 1,
+                        "title": "Ploidy for variant calling"
+                    },
+                    "freebayes_min_basequality": {
+                        "type": "integer",
+                        "default": 20,
+                        "title": "minimum base quality required for variant calling"
+                    },
+                    "freebayes_minallelefreq": {
+                        "type": "number",
+                        "default": 0.33,
+                        "title": "Minimum minor allele frequency for considering variants"
+                    },
+                    "bcftools_view_high_variant_quality": {
+                        "type": "integer",
+                        "default": 30,
+                        "title": "Minimum genotype quality for considering a variant high quality"
+                    },
+                    "bcftools_view_medium_variant_quality": {
+                        "type": "integer",
+                        "default": 20,
+                        "title": "Minimum genotype quality for considering a variant medium quality"
+                    },
+                    "bcftools_view_minimal_allelesupport": {
+                        "type": "integer",
+                        "default": 3,
+                        "title": "Minimum number of bases supporting the alternative allele"
+                    }
+                }
+            },
+            "reproducibility_options": {
+                "title": "Reproducibility Options",
+                "type": "object",
+                "description": "Use these parameters to also enable reproducible results from the individual assembly and binning tools .",
+                "default": "",
+                "properties": {
+                    "megahit_fix_cpu_1": {
+                        "title": "MEGAHIT Fix CPUs to 1",
+                        "type": "boolean",
+                        "description": "Fix number of CPUs for MEGAHIT to 1. Not increased with retries.",
+                        "help_text": "MEGAHIT only generates reproducible results when run single-threaded. \n\nWhen using this parameter do not change the number of CPUs for the `megahit` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                    },
+                    "spades_fix_cpus": {
+                        "title": "SPAdes Fix CPUs",
+                        "type": "integer",
+                        "default": -1,
+                        "description": "Fix number of CPUs used by SPAdes. Not increased with retries. Use -1 to allow an increasing number of CPUs to be used with each retry.",
+                        "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
+                    },
+                    "spadeshybrid_fix_cpus": {
+                        "title": "SPAdes Hybrid CPUs",
+                        "type": "integer",
+                        "default": -1,
+                        "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries. Use -1 to allow an increasing number of CPUs to be used with each retry.",
+                        "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
+                    },
+                    "metabat_rng_seed": {
+                        "title": "MetaBAT2 RNG Seed",
+                        "type": "integer",
+                        "default": 1,
+                        "description": "MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results. You can set it also to any other positive integer to ensure reproducibility. Set the parameter to 0 to use a random seed."
+                    }
+                }
+            }
+        }
+    }
+}

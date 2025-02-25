@@ -1,0 +1,111 @@
+{
+  "ui": {},
+  "form": {
+    "title": "De novo bacterial assembly and annotation (nf-core/bacass)",
+    "type": "object",
+    "properties": {
+      "assembler": {
+        "type": "object",
+        "title": "Assembly",
+        "properties": {
+          "assembler": {
+            "type": "string",
+            "title": "Assembler",
+            "description": "Tool used for de novo assembly",
+            "enum": [
+              "unicycler",
+              "canu",
+              "miniasm"
+            ],
+            "default": "unicycler"
+          }
+        },
+        "dependencies": {
+          "assembler": {
+            "oneOf": [
+              {
+                "properties": {
+                  "assembler": {
+                    "enum": ["unicycler"]
+                  },
+                  "unicycler_mode": {
+                    "type": "string",
+                    "title": "Unicycler mode",
+                    "description": "Mode used by Unicycler for genome assembly",
+                    "enum": [
+                      "conservative",
+                      "normal",
+                      "bold"
+                    ],
+                    "default": "normal"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "assembler": {
+                    "enum": ["canu"]
+                  },
+                  "canu_mode": {
+                    "type": "string",
+                    "title": "Canu mode",
+                    "description": "Mode used by Canu for genome assembly",
+                    "enum": [
+                      "-nanopore",
+                      "-pacbio",
+                      "-pacbio-hifi",
+                      "null"
+                    ],
+                    "enumNames": [
+                      "Nanopore",
+                      "PacBio",
+                      "PacBio HiFi",
+                      "None"
+                    ],
+                    "default": "-nanopore"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "assembler": {
+                    "enum": ["miniasm"]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "annotation": {
+        "type": "object",
+        "title": "Annotation",
+        "properties": {
+          "annotation_tool": {
+            "type": "string",
+            "title": "Annotation tool",
+            "description": "Tool used to annotate the assembly",
+            "enum": [
+              "prokka",
+              "bakta",
+              "dfast"
+            ],
+            "default": "prokka"
+          }
+        }
+      },
+      "skip_kraken2": {
+        "type": "boolean",
+        "title": "Skip Kraken2",
+        "description": "Skip running Kraken2 taxonomic classifier on reads",
+        "default": false
+      },
+      "skip_annotation": {
+        "type": "boolean",
+        "title": "Skip Annotation",
+        "description": "Skip annotating the assembly with Prokka",
+        "default": false
+      }
+    }
+  }
+}

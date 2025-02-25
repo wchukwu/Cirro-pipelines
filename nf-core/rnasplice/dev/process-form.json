@@ -1,0 +1,567 @@
+{
+  "ui": {},
+  "form": {
+    "title": "RNA-Seq Analysis Pipeline",
+    "type": "object",
+    "required": [
+      "genome"
+    ],
+    "properties": {
+      "genome": {
+        "type": "string",
+        "title": "Select A Reference Genome",
+        "description": "The following iGenomes are currently available for analysis",
+        "enum": [
+          "TAIR10",
+          "EB2",
+          "UMD3.1",
+          "bosTau8",
+          "WBcel235",
+          "ce10",
+          "CanFam3.1",
+          "canFam3",
+          "GRCz10",
+          "danRer10",
+          "BDGP6",
+          "dm6",
+          "EquCab2",
+          "equCab2",
+          "EB1",
+          "Galgal4",
+          "Gm01",
+          "GRCh37",
+          "GRCh38",
+          "hg18",
+          "hg19",
+          "hg38",
+          "Mmul 1",
+          "GRCm38",
+          "mm10",
+          "IRGSP-1.0",
+          "CHIMP2.1.4",
+          "panTro4",
+          "Rnor 5.0",
+          "Rnor 6.0",
+          "rn6",
+          "R64-1-1",
+          "sacCer3",
+          "EF2",
+          "Sbi1",
+          "Sscrofa10.2",
+          "susScr3",
+          "AGPv3"
+        ],
+        "enumNames": [
+          "Arabidopsis thaliana (TAIR10)",
+          "Bacillus subtilis 168 (EB2)",
+          "Bos taurus (UMD3.1)",
+          "Bos taurus (bosTau8)",
+          "Caenorhabditis elegans (WBcel235)",
+          "Caenorhabditis elegans (ce10)",
+          "Canis familiaris (CanFam3.1)",
+          "Canis familiaris (canFam3)",
+          "Danio rerio (GRCz10)",
+          "Danio rerio (danRer10)",
+          "Drosophila melanogaster (BDGP6)",
+          "Drosophila melanogaster (dm6)",
+          "Equus caballus (EquCab2)",
+          "Equus caballus (equCab2)",
+          "Escherichia coli K 12 DH10B (EB1)",
+          "Gallus gallus (Galgal4)",
+          "Glycine max (Gm01)",
+          "Homo sapiens (GRCh37)",
+          "Homo sapiens (GRCh38)",
+          "Homo sapiens (hg18)",
+          "Homo sapiens (hg19)",
+          "Homo sapiens (hg38)",
+          "Macaca mulatta (Mmul 1)",
+          "Mus musculus (GRCm38)",
+          "Mus musculus (mm10)",
+          "Oryza sativa japonica (IRGSP-1.0)",
+          "Pan troglodytes (CHIMP2.1.4)",
+          "Pan troglodytes (panTro4)",
+          "Rattus norvegicus (Rnor 5.0)",
+          "Rattus norvegicus (Rnor 6.0)",
+          "Rattus norvegicus (rn6)",
+          "Saccharomyces cerevisiae (R64-1-1)",
+          "Saccharomyces cerevisiae (sacCer3)",
+          "Schizosaccharomyces pombe (EF2)",
+          "Sorghum bicolor (Sbi1)",
+          "Sus scrofa (Sscrofa10.2)",
+          "Sus scrofa (susScr3)",
+          "Zea mays (AGPv3)"
+        ],
+        "default": "GRCh38"
+      },
+      "read_trimming_options": {
+        "title": "Read Trimming Options",
+        "type": "object",
+        "properties": {
+          "skip_trimming": {
+            "type": "boolean",
+            "title": "Skip adapter trimming?",
+            "default": false,
+            "help_text": "Use this if your input FastQ files have already been trimmed outside of the workflow or if you're very confident that there is no adapter contamination in your data."
+          }
+        },
+        "dependencies": {
+          "skip_trimming": {
+            "oneOf": [
+              {
+                "properties": {
+                  "skip_trimming": {
+                    "enum": [true]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "skip_trimming": {
+                    "enum": [false]
+                  },
+                  "clip_r1": {
+                    "type": "integer",
+                    "title": "Clip R1",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)."
+                  },
+                  "clip_r2": {
+                    "type": "integer",
+                    "title": "Clip R2",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)."
+                  },
+                  "three_prime_clip_r1": {
+                    "type": "integer",
+                    "title": "Three Prime Clip R1",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed."
+                  },
+                  "three_prime_clip_r2": {
+                    "type": "integer",
+                    "title": "Three Prime Clip R2",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed."
+                  },
+                  "trim_nextseq": {
+                    "type": "integer",
+                    "title": "Trim NextSeq",
+                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails.",
+                    "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases."
+                  },
+                  "save_trimmed": {
+                    "type": "boolean",
+                    "title": "Save the trimmed FastQ files in the results directory?"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "alignment_options": {
+        "title": "Alignment Options",
+        "type": "object",
+        "properties": {
+          "aligner": {
+            "type": "string",
+            "title": "Aligner",
+            "default": "star_salmon",
+            "description": "Specifies the alignment algorithm to use - available options are 'star_salmon' or 'star'.",
+            "enum": [
+              "star_salmon",
+              "star"
+            ]
+          },
+          "pseudo_aligner": {
+            "type": "string",
+            "title": "Pseudo Aligner",
+            "description": "Specifies the pseudo aligner to use - available options are 'salmon'. Runs in addition to '--aligner'.",
+            "enum": [
+              "salmon"
+            ],
+            "default": "salmon"
+          },
+          "salmon_quant_libtype": {
+            "type": "string",
+            "title": "Salmon Quant Lib Type",
+            "description": " Override Salmon library type inferred based on strandedness defined in meta object.",
+            "help_text": "See [Salmon docs](https://salmon.readthedocs.io/en/latest/library_type.html)."
+          },
+          "seq_center": {
+            "type": "string",
+            "title": "Seq Center",
+            "description": "Sequencing center information to be added to read group of BAM files.",
+            "default": "Fred Hutch Shared Resources"
+          },
+          "save_unaligned": {
+            "type": "boolean",
+            "title": "Save Unaligned (FastQ or BAM files depending upon tool)",
+            "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
+            "default": false
+          }
+        }
+      },
+      "rmats_options": {
+        "title": "rMATS Options",
+        "type": "object",
+        "properties": {
+          "rmats": {
+            "title": "Run rMATS workflow",
+            "type": "boolean",
+            "default": true
+          },
+          "rmats_splice_diff_cutoff": {
+            "title": "Cutoff p-value for differential splicing",
+            "type": "number",
+            "default": 0.0001
+          },
+          "rmats_paired_stats": {
+            "title": "Use paired statistical model",
+            "type": "boolean",
+            "default": true
+          },
+          "rmats_read_len": {
+            "title": "The length of each read",
+            "type": "number",
+            "default": 40
+          },
+          "rmats_novel_splice_site": {
+            "title": "Detect splicing events that involve an unannotated splice site",
+            "type": "boolean",
+            "default": true
+          },
+          "rmats_min_intron_len": {
+            "title": "Minimum intron length",
+            "type": "number",
+            "default": 50
+          },
+          "rmats_max_exon_len": {
+            "title": "Maximum exon length",
+            "type": "number",
+            "default": 500
+          }
+        }
+      },
+      "dexseq_deu_options": {
+          "title": "DEXSeq DEU options",
+          "type": "object",
+          "properties": {
+              "dexseq_exon": {
+                  "type": "boolean",
+                  "title": "Run DEXSeq: Differential Exon Usage",
+                  "default": true
+              },
+              "alignment_quality": {
+                  "type": "integer",
+                  "default": 10,
+                  "title": "Minimum Alignment Quality"
+              },
+              "aggregation": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Aggregation",
+                  "description": "Combine overlapping genes into a single aggregate gene."
+              },
+              "n_dexseq_plot": {
+                  "type": "integer",
+                  "default": 10,
+                  "title": "Plot Genes (#)",
+                  "description": "Plot the N most significant genes from the DEXSeq results."
+              }
+          }
+      },
+      "edger_deu_options": {
+          "title": "edgeR DEU options",
+          "type": "object",
+          "properties": {
+              "edger_exon": {
+                  "type": "boolean",
+                  "title": "Run edgeR",
+                  "default": true
+              },
+              "n_edger_plot": {
+                  "type": "integer",
+                  "default": 10,
+                  "title": "Plot Genes (#)",
+                  "description": "Plot the N most significant genes from the edgeR results."
+              }
+          }
+      },
+      "dexseq_dtu_options": {
+          "title": "DEXSeq DTU options",
+          "type": "object",
+          "properties": {
+              "dexseq_dtu": {
+                  "type": "boolean",
+                  "title": "Run DEXSeq: Differential Transcript Usage",
+                  "default": true
+              },
+              "dtu_txi": {
+                  "type": "string",
+                  "title": "Abundance Estimation Method",
+                  "default": "dtuScaledTPM",
+                  "enum": ["dtuScaledTPM", "scaledTPM"],
+                  "description": "Generate estimated counts using dtuScaledTPM or scaledTPM abundance estimates."
+              },
+              "min_samps_gene_expr": {
+                  "type": "integer",
+                  "default": 6,
+                  "title": "Minimum Sample Number - Genes",
+                  "description": "Minimal number of samples where genes should be expressed."
+              },
+              "min_samps_feature_expr": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "Minimum Sample Number - Features",
+                  "description": "Minimal number of samples where features should be expressed."
+              },
+              "min_samps_feature_prop": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "Minimum Sample Proportion - Features",
+                  "description": "Minimal proportion of samples where features should be expressed."
+              },
+              "min_gene_expr": {
+                  "type": "integer",
+                  "default": 10,
+                  "title": "Minimal Gene Expression"
+              },
+              "min_feature_expr": {
+                  "type": "integer",
+                  "default": 10,
+                  "title": "Minimal Feature Expression"
+              },
+              "min_feature_prop": {
+                  "type": "number",
+                  "default": 0.1,
+                  "title": "Minimal Proportion for Feature Expression [0-1]"
+              }
+          }
+      },
+      "miso": {
+          "title": "Miso",
+          "type": "object",
+          "properties": {
+              "sashimi_plot": {
+                  "type": "boolean",
+                  "description": "Create sashimi plots using MISO",
+                  "title": "Sashimi Plot",
+                  "default": true
+              },
+              "miso_genes": {
+                  "type": "string",
+                  "default": "",
+                  "title": "Genes to Plot",
+                  "description": "List containing identifiers of genes to plot (e.g. ENSG00000004961, ENSG00000005302)."
+              },
+              "miso_read_len": {
+                  "type": "integer",
+                  "default": 75,
+                  "title": "Read Length",
+                  "description": "Read length used to calculate coverage."
+              },
+              "fig_height": {
+                  "type": "integer",
+                  "default": 7,
+                  "title": "Figure Height (inches)."
+              },
+              "fig_width": {
+                  "type": "integer",
+                  "default": 7,
+                  "title": "Figure Width (inches)."
+              }
+          }
+      },
+      "suppa_options": {
+          "title": "SUPPA options",
+          "type": "object",
+          "properties": {
+              "suppa": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Run SUPPA"
+              },
+              "suppa_per_local_event": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Event Inclusion",
+                  "description": "Quantify event inclusion levels (PSIs) from multiple samples."
+              },
+              "suppa_per_isoform": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Isoform Inclusion",
+                  "description": "Quantify isoform inclusion levels (PSIs) from multiple samples."
+              },
+              "generateevents_pool_genes": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Pool Genes",
+                  "description": "Redefine genes by clustering together transcripts by genomic stranded overlap and sharing at least one exon."
+              },
+              "generateevents_event_type": {
+                  "type": "string",
+                  "default": "SE SS MX RI FL",
+                  "title": "Event Type",
+                  "description": "Space separated list of events to generate."
+              },
+              "generateevents_boundary": {
+                  "type": "string",
+                  "default": "S",
+                  "title": "Boundary Type",
+                  "description": "Only used for local AS events",
+                  "enum": ["S", "V"]
+              },
+              "generateevents_threshold": {
+                  "type": "integer",
+                  "default": 10,
+                  "title": "Variability Threshold"
+              },
+              "generateevents_exon_length": {
+                  "type": "integer",
+                  "default": 100,
+                  "title": "Exon Length",
+                  "description": "Defines the number of nucleotides to display in the output GTF."
+              },
+              "psiperevent_total_filter": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "Minimum Expression",
+                  "description": "Minimum total expression of the transcripts involved in the event."
+              },
+              "diffsplice_local_event": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Use Local Events",
+                  "description": "Calculate differential splicing for AS events across multiple conditions with replicates."
+              },
+              "diffsplice_isoform": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Use Isoforms",
+                  "description": "Calculate differential splicing for differential transcript usage across multiple conditions with replicates"
+              },
+              "diffsplice_method": {
+                  "type": "string",
+                  "default": "empirical",
+                  "enum": ["empirical", "classical"],
+                  "title": "Significance Method"
+              },
+              "diffsplice_area": {
+                  "type": "integer",
+                  "default": 1000,
+                  "title": "Area",
+                  "description": "Integer indicating the number of points in the local area of the delta PSI - average TPM distribution."
+              },
+              "diffsplice_lower_bound": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "Lower Bound",
+                  "description": "Lower-bound for the absolute delta PSI value to test for significance."
+              },
+              "diffsplice_gene_correction": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Gene Correction",
+                  "description": "Correct the p-values by gene."
+              },
+              "diffsplice_paired": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Paired",
+                  "description": "Indicates if replicates across conditions are paired."
+              },
+              "diffsplice_alpha": {
+                  "type": "number",
+                  "default": 0.05,
+                  "title": "Alpha",
+                  "description": "Family-wise error rate to use for the multiple test correction."
+              },
+              "diffsplice_median": {
+                  "type": "boolean",
+                  "title": "Use Median",
+                  "description": "Use the median to calculate the Delta PSI, instead of the mean."
+              },
+              "diffsplice_tpm_threshold": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "TPM Threshold",
+                  "description": "Minimum expression (calculated as average TPM value within-replicates and between-conditions) to be included in the analysis."
+              },
+              "diffsplice_nan_threshold": {
+                  "type": "integer",
+                  "default": 0,
+                  "title": "NaN Threshold",
+                  "description": "Proportion of samples with nan values allowed per condition to calculate a DeltaPSI ."
+              },
+              "clusterevents_local_event": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Cluster events according to PSI values across conditions"
+              },
+              "clusterevents_isoform": {
+                  "type": "boolean",
+                  "default": true,
+                  "title": "Cluster transcripts according to PSI values across conditions"
+              },
+              "clusterevents_sigthreshold": {
+                  "type": "number",
+                  "title": "Clustering Threshold",
+                  "default": 0.05,
+                  "description": "P-value threshold to consider an event significant from the dpsi file."
+              },
+              "clusterevents_dpsithreshold": {
+                  "type": "number",
+                  "default": 0.05,
+                  "title": "Delta PSI Threshold",
+                  "description": "Lower-bound for the absolute delta PSI value to cluster."
+              },
+              "clusterevents_eps": {
+                  "type": "number",
+                  "default": 0.05,
+                  "title": "Clustering Threshold",
+                  "description": "Maximum distance (between 0 and 1) to consider two events as members of the same cluster."
+              },
+              "clusterevents_metric": {
+                  "type": "string",
+                  "default": "euclidean",
+                  "enum": ["euclidean", "manhattan", "cosine"],
+                  "title": "Distance Metric"
+              },
+              "clusterevents_separation": {
+                  "type": "integer",
+                  "title": "Separation",
+                  "description": "Maximum distance in PSI space of an event to a cluster."
+              },
+              "clusterevents_min_pts": {
+                  "type": "integer",
+                  "default": 20,
+                  "title": "Minimum Events",
+                  "description": "Minimum number of events required per cluster."
+              },
+              "clusterevents_method": {
+                  "type": "string",
+                  "default": "DBSCAN",
+                  "title": "Clustering Method",
+                  "enum": ["OPTICS", "DBSCAN"],
+                  "description": "Clustering method to use (DBSCAN, OPTICS)."
+              }
+          }
+      },
+      "process_skipping_options": {
+        "title": "Process skipping options",
+        "type": "object",
+        "description": "Options to skip various steps within the workflow.",
+        "properties": {
+          "skip_bigwig": {
+            "type": "boolean",
+            "title": "Skip bigWig file creation",
+            "default": false
+          },
+          "skip_fastqc": {
+            "type": "boolean",
+            "title": "Skip FastQC",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}

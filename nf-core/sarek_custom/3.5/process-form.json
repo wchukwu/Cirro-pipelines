@@ -1,0 +1,189 @@
+{
+    "ui": {
+      "analysis_type": {
+        "tools": {
+          "ui:widget": "checkboxes"
+        }
+      },
+      "read_trimming_options": {
+        "trim_fastq": {
+          "ui:widget": "radio"
+        }
+      }
+    },
+    "form": {
+      "title": "Variant Calling - Custom Genome (nf-core/sarek)",
+      "description": "Perform variant calling on unaligned sequence reads using a custom reference FASTA",
+      "type": "object",
+      "properties": {
+        "analysis_type": {
+          "title": "Experiment Design",
+          "description": "Indiciate the analysis type (germline/somatic) and select high level parameters for the workflow.",
+          "type": "object",
+          "required": ["fasta", "tools", "wes"],
+          "properties": {
+            "fasta": {
+              "title": "Reference Genome",
+              "description": "To add a new genome, upload as Reference Genome (FASTA) on the Manage References page",
+              "file": "**/genome_fasta/**/genome.fasta",
+              "pathType": "references",
+              "type": "string"
+            },
+            "wes": {
+              "title": "Whole Exome/Targeted Gene Panel Assay",
+              "description": "Please indicate if your data was generated using a capture kit.",
+              "type": "boolean",
+              "default": false
+            },
+            "intervals": {
+              "title": "Genomic intervals",
+              "description": "(optional) Target BED file in case of whole exome or targeted sequencing or intervals file for parallelization.",
+              "type": "string",
+              "pathType": "references",
+              "file": "**/genome_bed/**/regions.bed"
+            },
+            "tools": {
+              "title": "Variant calling tool(s)",
+              "description": "Please select one or more (germline) variant callers for your analysis.",
+              "type": "array",
+              "pattern": "^((cnvkit|deepvariant|freebayes|haplotypecaller|manta|mpileup|strelka|tiddit)*,?)*$",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "cnvkit",
+                  "deepvariant",
+                  "freebayes",
+                  "haplotypecaller",
+                  "manta",
+                  "mpileup",
+                  "strelka",
+                  "tiddit"
+                ],
+                "enumNames": [
+                  "CNVkit",
+                  "DeepVariant",
+                  "FreeBayes",
+                  "HaplotypeCaller",
+                  "Manta",
+                  "mpileup",
+                  "Strelka",
+                  "TIDDIT"
+                ]
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "read_trimming_options": {
+          "title": "Read Trimming Options",
+          "description": "Parameters for performing adapter and read trimming using Trim-Galore.",
+          "type": "object",
+          "properties": {
+            "trim_fastq": {
+              "type": "boolean",
+              "title": "Trim reads using Trim-Galore?",
+              "default": false
+            }
+          },
+          "dependencies": {
+            "trim_fastq": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "trim_fastq": {
+                      "enum": [false]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "trim_fastq": {
+                      "enum": [true]
+                    },
+                    "clip_r1": {
+                      "type": "integer",
+                      "title": "Clip R1",
+                      "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)."
+                    },
+                    "clip_r2": {
+                      "type": "integer",
+                      "title": "Clip R2",
+                      "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)."
+                    },
+                    "three_prime_clip_r1": {
+                      "type": "integer",
+                      "title": "Three Prime Clip R1",
+                      "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed."
+                    },
+                    "three_prime_clip_r2": {
+                      "type": "integer",
+                      "title": "Three Prime Clip R2",
+                      "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed."
+                    },
+                    "trim_nextseq": {
+                      "type": "integer",
+                      "title": "Trim NextSeq",
+                      "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails.",
+                      "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases."
+                    },
+                    "save_trimmed": {
+                      "type": "boolean",
+                      "title": "Save the trimmed FastQ files in the results directory?",
+                      "default": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "preprocessing": {
+            "title": "Preprocessing",
+            "type": "object",
+            "description": "Configure preprocessing tools",
+            "properties": {
+                "aligner": {
+                    "type": "string",
+                    "default": "bwa-mem",
+                    "title": "Aligner",
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
+                    "description": "Specify aligner to be used to map reads to reference genome."
+                },
+                "save_mapped": {
+                    "type": "boolean",
+                    "title": "Select to save alignment files",
+                    "description": "Save Alignments (BAM/CRAM)",
+                    "default": true
+                }
+            },
+            "dependencies": {
+              "save_mapped": {
+                "oneOf": [
+                  {
+                    "properties": {
+                      "save_mapped": {
+                        "enum": [false]
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "save_mapped": {
+                        "enum": [true]
+                      },
+                      "alignment_format": {
+                        "type": "string",
+                        "title": "Alignment Format",
+                        "description": "File format used to save aligned reads",
+                        "enum": ["BAM", "CRAM"],
+                        "default": "BAM"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+        }
+      }
+    }
+  }

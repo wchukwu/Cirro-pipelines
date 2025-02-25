@@ -1,0 +1,273 @@
+{
+  "ui": {},
+  "form": {
+    "title": "CUT&RUN (CUT&Tag) Analysis Pipeline",
+    "type": "object",
+    "required": ["genome"],
+    "properties": {
+      "genome": {
+        "type": "string",
+        "title": "Reference Genome",
+        "description": "The following iGenomes are currently available for analysis",
+        "enum": [
+          "TAIR10",
+          "EB2",
+          "UMD3.1",
+          "bosTau8",
+          "WBcel235",
+          "ce10",
+          "CanFam3.1",
+          "canFam3",
+          "GRCz10",
+          "danRer10",
+          "BDGP6",
+          "dm6",
+          "EquCab2",
+          "equCab2",
+          "EB1",
+          "Galgal4",
+          "Gm01",
+          "GRCh37",
+          "GRCh38",
+          "hg18",
+          "hg19",
+          "hg38",
+          "Mmul 1",
+          "GRCm38",
+          "mm10",
+          "IRGSP-1.0",
+          "CHIMP2.1.4",
+          "panTro4",
+          "Rnor 5.0",
+          "Rnor 6.0",
+          "rn6",
+          "R64-1-1",
+          "sacCer3",
+          "EF2",
+          "Sbi1",
+          "Sscrofa10.2",
+          "susScr3",
+          "AGPv3"
+        ],
+        "enumNames": [
+          "Arabidopsis thaliana (TAIR10)",
+          "Bacillus subtilis 168 (EB2)",
+          "Bos taurus (UMD3.1)",
+          "Bos taurus (bosTau8)",
+          "Caenorhabditis elegans (WBcel235)",
+          "Caenorhabditis elegans (ce10)",
+          "Canis familiaris (CanFam3.1)",
+          "Canis familiaris (canFam3)",
+          "Danio rerio (GRCz10)",
+          "Danio rerio (danRer10)",
+          "Drosophila melanogaster (BDGP6)",
+          "Drosophila melanogaster (dm6)",
+          "Equus caballus (EquCab2)",
+          "Equus caballus (equCab2)",
+          "Escherichia coli K 12 DH10B (EB1)",
+          "Gallus gallus (Galgal4)",
+          "Glycine max (Gm01)",
+          "Homo sapiens (GRCh37)",
+          "Homo sapiens (GRCh38)",
+          "Homo sapiens (hg18)",
+          "Homo sapiens (hg19)",
+          "Homo sapiens (hg38)",
+          "Macaca mulatta (Mmul 1)",
+          "Mus musculus (GRCm38)",
+          "Mus musculus (mm10)",
+          "Oryza sativa japonica (IRGSP-1.0)",
+          "Pan troglodytes (CHIMP2.1.4)",
+          "Pan troglodytes (panTro4)",
+          "Rattus norvegicus (Rnor 5.0)",
+          "Rattus norvegicus (Rnor 6.0)",
+          "Rattus norvegicus (rn6)",
+          "Saccharomyces cerevisiae (R64-1-1)",
+          "Saccharomyces cerevisiae (sacCer3)",
+          "Schizosaccharomyces pombe (EF2)",
+          "Sorghum bicolor (Sbi1)",
+          "Sus scrofa (Sscrofa10.2)",
+          "Sus scrofa (susScr3)",
+          "Zea mays (AGPv3)"
+        ],
+        "default": "GRCh38"
+      },
+      "minimum_alignment_q_score": {
+        "type": "integer",
+        "title": "Minimum Alignment Q-Score Threshold",
+        "description": "Filter reads below a q-score threshold",
+        "default": 0
+      },
+      "dedup_target_reads": {
+        "type": "boolean",
+        "title": "Deduplicate Target Reads",
+        "description": "Deduplicate non-control reads"
+      },
+      "normalisation_mode": {
+        "type": "string",
+        "default": "Spikein",
+        "title": "Normalization Mode",
+        "description": "Sets the target read normalisation mode",
+        "enum": ["Spikein", "RPKM", "CPM", "BPM", "None"]
+      },
+      "normalisation_binsize": {
+        "type": "integer",
+        "default": 1,
+        "title": "Normalization Binsize",
+        "description": "If normsalisation option is one of  \"RPKM\", \"CPM\", \"BPM\" - then the binsize that the reads count is calculated on is used."
+      },
+      "peak_threshold": {
+        "type": "number",
+        "default": 0.05,
+        "title": "Peak Threshold",
+        "description": "Threshold for peak calling when no IgG is present"
+      },
+      "peakcaller": {
+        "type": "string",
+        "default": "seacr",
+        "title": "Peak Caller",
+        "description": "Selects the peak caller for the pipeline. More than one peak caller can be chosen and the order specifies which is a primary peak called (the first) that will be used downstream. Any secondary peak callers will be run and outputed to the results folder.",
+        "enum": [
+          "seacr",
+          "macs2",
+          "seacr,macs2",
+          "macs2,seacr"
+        ]
+      },
+      "use_control": {
+        "type": "boolean",
+        "default": true,
+        "title": "Use Control (e.g. IgG)",
+        "description": "Specifies whether to use a control to normalise peak calls against (e.g. IgG)"
+      },
+      "igg_scale_factor": {
+        "type": "number",
+        "default": 1.0,
+        "title": "IgG Scale Factor",
+        "description": "Specifies whether the background control is scaled prior to being used to normalise peaks."
+      },
+      "macs2_pvalue": {
+        "type": "number",
+        "default": 0.05,
+        "title": "MACS2 p-value",
+        "description": "P-value threshold for MACS2 peak caller"
+      },
+      "macs_gsize": {
+        "type": "number",
+        "default": 2700000000.0,
+        "title": "MACS2 Genome Size",
+        "description": "Parameter required by MACS2. If using an iGenomes reference these have been provided when `--genome` is set as *GRCh37*, *GRCh38*, *GRCm38*, *WBcel235*, *BDGP6*, *R64-1-1*, *EF2*, *hg38*, *hg19* and *mm10*. Otherwise the gsize will default to GRCh38."
+      },
+      "run_narrow_peak": {
+        "type": "boolean",
+        "title": "MACS2 - Narrow Peak Mode",
+        "default": false
+      },
+      "consensus_peak_mode": {
+        "type": "string",
+        "default": "group",
+        "title": "Consensus Peak Mode",
+        "description": "Specifies what samples to group together for consensus peaks",
+        "enum": ["group", "all"]
+      },
+      "replicate_threshold": {
+        "type": "integer",
+        "title": "Replicate Threshold",
+        "description": "Minimum number of overlapping replicates needed for a consensus peak",
+        "default": 1
+      },
+      "read_trimming_options": {
+        "title": "Read Trimming Options",
+        "type": "object",
+        "properties": {
+          "skip_trimming": {
+            "type": "boolean",
+            "title": "Skip adapter trimming",
+            "default": true,
+            "description": "Use this if your input FastQ files have already been trimmed outside of the workflow or if you're very confident that there is no adapter contamination in your data."
+          }
+        },
+        "dependencies": {
+          "skip_trimming": {
+            "oneOf": [
+              {
+                "properties": {
+                  "skip_trimming": {
+                    "enum": [true]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "skip_trimming": {
+                    "enum": [false]
+                  },
+                  "clip_r1": {
+                    "type": "integer",
+                    "title": "Clip R1 (5')",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)."
+                  },
+                  "clip_r2": {
+                    "type": "integer",
+                    "title": "Clip R2 (5')",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)."
+                  },
+                  "three_prime_clip_r1": {
+                    "type": "integer",
+                    "title": "Clip R1 (3')",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed."
+                  },
+                  "three_prime_clip_r2": {
+                    "type": "integer",
+                    "title": "Clip R2 (3')",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed."
+                  },
+                  "trim_nextseq": {
+                    "type": "integer",
+                    "title": "Trim NextSeq",
+                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails.",
+                    "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases."
+                  },
+                  "save_trimmed": {
+                    "type": "boolean",
+                    "title": "Save the trimmed FastQ files in the results directory?"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "alignment_options": {
+        "title": "Alignment Options",
+        "type": "object",
+        "properties": {
+          "spikein_genome": {
+            "type": "string",
+            "title": "Spike-In Control",
+            "description": "Select an iGenomes Reference to be used as the spike-in control",
+            "help_text": "See the nf-core website docs (https://nf-co.re/usage/reference_genomes) for more details on the genomes available for analysis.",
+            "default": "K12-MG1655",
+            "enumNames": [
+              "Escherichia coli K-12 (DH10B)", 
+              "Escherichia coli K-12 (MG1655)"
+            ],
+            "enum": [
+              "EB1",
+              "K12-MG1655"
+            ]
+          },
+          "save_unaligned": {
+            "type": "boolean",
+            "title": "Save Unaligned Sequences",
+            "description": "Save the unaligned sequences to the results directory?"
+          },
+          "save_spikein_aligned": {
+            "type": "boolean",
+            "title": "Save Spike-In Genome Aligned BAM Files",
+            "description": "Save the bam files aligned to the spike-in genome to the results directory?"
+          }
+        }
+      }
+    }
+  }
+}

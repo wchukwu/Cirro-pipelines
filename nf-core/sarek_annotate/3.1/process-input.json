@@ -1,0 +1,12 @@
+{
+  "step": "annotate",
+  "annotation_tool": "$.params.dataset.paramJson.annotation.annotation_tool",
+  "vep_dbnsfp": "$.params.dataset.paramJson.annotation.vep_dbnsfp",
+  "vep_loftee": "$.params.dataset.paramJson.annotation.vep_loftee",
+  "vep_spliceai": "$.params.dataset.paramJson.annotation.vep_spliceai",
+  "vep_spliceregion": "$.params.dataset.paramJson.annotation.vep_spliceregion",
+  "genome": "$.params.dataset.paramJson.analysis_type.genome",
+  "outdir": "$.params.dataset.s3|/data/",
+  "input": "manifest.csv",
+  "igenomes_base": "s3://pubweb-references/igenomes"
+}

@@ -1,0 +1,37 @@
+{
+  "commands": [
+    {
+      "command": "load.CsvConcat",
+      "params": {
+        "glob": "$data_directory/metadata/*.runinfo_ftp.tsv",
+        "sep": "\t"
+      },
+      "commands": [
+        {
+          "command": "transforms.DataframeColumnKeep",
+          "params": {
+            "columns": [
+              "run_accession",
+              "study_accession",
+              "study_title",
+              "sample_title",
+              "description",
+              "library_source",
+              "library_layout",
+              "read_count",
+              "base_count"
+            ]
+          },
+          "commands": [
+            {
+              "command": "save.DataframeCsv",
+              "params": {
+                "prefix": "summary"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

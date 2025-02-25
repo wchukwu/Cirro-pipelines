@@ -1,0 +1,50 @@
+{
+  "ui": {},
+  "form": {
+    "title": "De novo bacterial assembly and annotation (nf-core/bacass)",
+    "description": "Make sure to select both a short-read and a long-read dataset as input above.",
+    "type": "object",
+    "properties": {
+      "merge_on": {
+        "type": "string",
+        "title": "Merge On",
+        "description": "Metadata field used to merge short and long reads (if more than one sample is provided)",
+        "default": "sample"
+      },
+      "unicycler_mode": {
+        "type": "string",
+        "title": "Assembly mode",
+        "description": "Parameter used by UniCycler for genome assembly",
+        "enum": [
+          "conservative",
+          "normal",
+          "bold"
+        ],
+        "default": "normal"
+      },
+      "annotation_tool": {
+        "type": "string",
+        "title": "Annotation tool",
+        "description": "Tool used to annotate the assembly",
+        "enum": [
+          "prokka",
+          "bakta",
+          "dfast"
+        ],
+        "default": "prokka"
+      },
+      "skip_kraken2": {
+        "type": "boolean",
+        "title": "Skip Kraken2",
+        "description": "Skip running Kraken2 taxonomic classifier on reads",
+        "default": false
+      },
+      "skip_annotation": {
+        "type": "boolean",
+        "title": "Skip Annotation",
+        "description": "Skip annotating the assembly with Prokka",
+        "default": false
+      }
+    }
+  }
+}

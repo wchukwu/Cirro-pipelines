@@ -1,0 +1,141 @@
+{
+  "ui": {
+    "read_trimming_options": {
+      "trim_fastq": {
+        "ui:widget": "radio"
+      }
+    }
+  },
+  "form": {
+    "title": "Align Reads (nf-core/sarek)",
+    "description": "Perform read alignment, mark duplicates, and base recalibration.",
+    "type": "object",
+    "properties": {
+      "workflow_version": {
+        "type": "string",
+        "title": "Workflow Version",
+        "description": "Select the specific version of nf-core/sarek used for analysis",
+        "enum": [
+          "3.1",
+          "3.1.1",
+          "3.1.2",
+          "3.2.0",
+          "3.2.1",
+          "3.2.2",
+          "3.2.3",
+          "3.3.0",
+          "3.3.1",
+          "3.3.2"
+        ],
+        "default": "3.2.3"
+      },
+      "analysis_type": {
+        "title": "Experimental Design",
+        "description": "Details on the reference genome and optional target panel used to generate sequences.",
+        "type": "object",
+        "required": ["genome", "wes"],
+        "properties": {
+          "genome": {
+            "title": "Reference Genome",
+            "type": "string",
+            "default": "GATK.GRCh38",
+            "enum": ["GATK.GRCh38", "GATK.GRCh37", "GRCm38"],
+            "enumNames": [
+              "Homo sapiens (GATK.GRCh38)",
+              "Homo sapiens (GATK.GRCh37)",
+              "Mus musculus (GRCm38)"
+            ]
+          },
+          "wes": {
+            "title": "Whole Exome/Targeted Gene Panel Assay",
+            "description": "Please indicate if your data was generated using a capture kit.",
+            "type": "boolean",
+            "default": false
+          },
+          "intervals": {
+            "title": "Genomic intervals",
+            "description": "Target bed file in case of whole exome or targeted sequencing or intervals file for parallelization.",
+            "type": "string",
+            "pathType": "references",
+            "file": "**/genome_bed/**/regions.bed"
+          }
+        }
+      },
+      "read_trimming_options": {
+        "title": "Read Trimming Options",
+        "description": "Parameters for performing adapter and read trimming using Trim-Galore.",
+        "type": "object",
+        "properties": {
+          "trim_fastq": {
+            "type": "boolean",
+            "title": "Trim reads using Trim-Galore?",
+            "default": false
+          }
+        },
+        "dependencies": {
+          "trim_fastq": {
+            "oneOf": [
+              {
+                "properties": {
+                  "trim_fastq": {
+                    "enum": [false]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "trim_fastq": {
+                    "enum": [true]
+                  },
+                  "clip_r1": {
+                    "type": "integer",
+                    "title": "Clip R1",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 1 (or single-end reads)."
+                  },
+                  "clip_r2": {
+                    "type": "integer",
+                    "title": "Clip R2",
+                    "description": "Instructs Trim Galore to remove bp from the 5' end of read 2 (paired-end reads only)."
+                  },
+                  "three_prime_clip_r1": {
+                    "type": "integer",
+                    "title": "Three Prime Clip R1",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 1 AFTER adapter/quality trimming has been performed."
+                  },
+                  "three_prime_clip_r2": {
+                    "type": "integer",
+                    "title": "Three Prime Clip R2",
+                    "description": "Instructs Trim Galore to remove bp from the 3' end of read 2 AFTER adapter/quality trimming has been performed."
+                  },
+                  "trim_nextseq": {
+                    "type": "integer",
+                    "title": "Trim NextSeq",
+                    "description": "Instructs Trim Galore to apply the --nextseq=X option, to trim based on quality after removing poly-G tails.",
+                    "help_text": "This enables the option Cutadapt `--nextseq-trim=3'CUTOFF` option via Trim Galore, which will set a quality cutoff (that is normally given with -q instead), but qualities of G bases are ignored. This trimming is in common for the NextSeq- and NovaSeq-platforms, where basecalls without any signal are called as high-quality G bases."
+                  },
+                  "save_trimmed": {
+                    "type": "boolean",
+                    "title": "Save the trimmed FastQ files in the results directory?",
+                    "default": false
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "advanced_options": {
+        "type": "object",
+        "title": "Advanced Options",
+        "properties": {
+          "optical_duplicate_pixel_distance": {
+            "type": "integer",
+            "title": "MarkDuplicates - Optical Duplicate Pixel Distance",
+            "description": "The `--OPTICAL_DUPLICATE_PIXEL_DISTANCE` parameter is used by MarkDuplicates to set the maximum offset between two duplicate clusters in pixels for them to be considered optical duplicates. A value of 100 is generally appropriate for unpatterned Illumina flowcells and 250 is appropriate for patterned Illumina flow cells.",
+            "default": 100
+          }
+        }
+      }
+    }
+  }
+}
