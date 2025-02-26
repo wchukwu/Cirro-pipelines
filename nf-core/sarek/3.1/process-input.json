@@ -21,5 +21,6 @@
   "outdir": "$.params.dataset.s3|/data/",
   "input": "manifest.csv",
   "germline_resource": "$.params.dataset.paramJson.analysis_type.germline_resource",
-  "igenomes_base": "s3://pubweb-references/igenomes"
+  "igenomes_base": "s3://pubweb-references/igenomes",
+  "joint_mutect2": "$.params.dataset.paramJson.analysis_type.joint_mutect2"
 }
