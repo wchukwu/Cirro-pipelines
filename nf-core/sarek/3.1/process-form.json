@@ -170,6 +170,31 @@
                 }
               }
             }
+          },
+          {
+            "if": {
+              "required": [
+                "tools"
+              ],
+              "properties": {
+                "tools": {
+                  "contains": {
+                    "type": "string",
+                    "const": "mutect2"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "joint_mutect2": {
+                  "type": "boolean",
+                  "title": "Joint calling with Mutect2",
+                  "description": "Runs Mutect2 in joint (multi-sample) mode for better concordance among variant calls of tumor samples from the same patient.",
+                  "default": false
+                }
+              }
+            }
           }
         ]
       },
